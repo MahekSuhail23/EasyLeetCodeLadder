@@ -1,0 +1,71 @@
+Implement the myAtoi(string s) function, which converts a string to a 32-bit signed integer.
+
+Example 1:
+Input: s = "42"
+Output: 42
+Explanation:
+The underlined characters are what is read in and the caret is the current reader position.
+Step 1: "42" (no characters read because there is no leading whitespace)
+         ^
+Step 2: "42" (no characters read because there is neither a '-' nor '+')
+         ^
+Step 3: "42" ("42" is read in)
+           ^
+Example 2:
+Input: s = " -042"
+Output: -42
+Explanation:
+Step 1: "   -042" (leading whitespace is read and ignored)
+            ^
+Step 2: "   -042" ('-' is read, so the result should be negative)
+             ^
+Step 3: "   -042" ("042" is read in, leading zeros ignored in the result)
+
+SOLUTION
+
+class Solution:
+    def myAtoi(self,s):
+        n = len(s)
+        result = 0
+        dig = False
+        place = False
+        negative = False
+        ot = False
+        
+        i = 0
+        while i < n and s[i] == ' ':
+            i += 1
+            
+        for j in range(i, n):
+            if ot:
+                break
+                
+            if '0' <= s[j] <= '9':
+                result = (result * 10) + (ord(s[j]) - ord('0'))
+                dig = True
+            else:
+                if dig:
+                    break
+                
+                elif s[j] == '-' and not negative:
+                    negative = True
+                    
+                elif s[j] == '+' and not place:
+                    place = True
+                    
+                else:
+                    ot = True
+                    
+        if place and negative:
+            return 0
+        
+        if negative:
+            result = -result
+            
+        if result > 2**31 - 1:
+            return 2**31 - 1
+        
+        if result < -2**31:
+            return -2**31
+        
+        return int(result)
